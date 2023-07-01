@@ -1,0 +1,12 @@
+.contactSection{
+  display: flex;
+  align-items: center;
+  gap: 20px
+}
+
+.deleteButton{
+
+  margin-top: 10px;
+
+  height: 25px;
+}
