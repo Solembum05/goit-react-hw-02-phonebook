@@ -1,8 +1,9 @@
 import React from 'react';
 import Phonebook from './Phonebook/Phonebook'
-import ContactList from './Phonebook/ContactList'
-import Filter from './Phonebook/Filter'
+import ContactList from './ContactList/ContactList'
+import Filter from './Filter/Filter'
 import css from './App.module.css';
+import { nanoid } from 'nanoid'
 class App extends React.Component {
   state = {
     contacts: [
@@ -27,16 +28,26 @@ class App extends React.Component {
           alert(`${data.name} is already in contacts`);
           return;
         }
-    this.setState({ contacts: [...this.state.contacts, data] });
+
+    const newContact = {
+      ...data,
+      id: nanoid(),
+    }
+
+    
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, newContact],
+    }));
 
 
   };
 
   onRemoveContact = contactId => {
-    this.setState({
-      contacts: this.state.contacts.filter(contact => contact.id !== contactId),
-    });
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId)
+    }))
   };
+    
 
   onFilterContact = event => {
     this.setState({ filter: event.target.value });
@@ -52,17 +63,19 @@ class App extends React.Component {
   };
 
   render() {
+      const {contacts, filter} =this.state;
+
     return (
       <div>
         <Phonebook addContact={this.formSubmitHandler} state={this.state} />
         <h2 className={css.title}>Contacts</h2>
 
         <Filter
-          onFilterData={this.state.filter}
+          onFilterData={filter}
           onFilterContact={this.onFilterContact}
         />
 
-        {this.state.contacts.length > 0 && (
+        {contacts.length > 0 && (
           <ContactList
             removeContact={this.onRemoveContact}
             contacts={this.getOneContact()}
